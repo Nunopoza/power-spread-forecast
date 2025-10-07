@@ -53,3 +53,5 @@ Nuno Poza - 2025
 
 ---
 _Data source: ENTSO-E Transparency Platform | Model: RandomForestRegressor (200 trees)_
+
+_Last updated on Tue Oct  7 15:09:40 CEST 2025_

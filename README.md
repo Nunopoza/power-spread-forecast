@@ -34,3 +34,6 @@ power-spread-forecast/
 
 ## Author
 Nuno Poza - 2025
+
+## Next steps
+- Add model training module

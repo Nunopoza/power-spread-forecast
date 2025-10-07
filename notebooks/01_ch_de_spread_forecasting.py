@@ -228,8 +228,33 @@ plt.show()
 
 import os
 from datetime import datetime
+import re
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# Guardar métricas
+# ========= GUARDAR GRÁFICOS =========
+os.makedirs("figures", exist_ok=True)
+
+# Gráfico de pred vs actual
+plt.figure(figsize=(12, 5))
+plt.plot(y_test.index, y_test, label="Actual", linewidth=1)
+plt.plot(y_test.index, y_pred, label="Predicted", linewidth=1)
+plt.title("Swiss-German Day-Ahead Price Spread Forecast")
+plt.xlabel("Date")
+plt.ylabel("Spread (€/MWh)")
+plt.legend()
+plt.tight_layout()
+plt.savefig("figures/spread_forecast.png")
+plt.close()
+
+# Feature importance
+importances = pd.Series(model.feature_importances_, index=X.columns).sort_values(ascending=False)
+importances.plot(kind="barh", title="Feature Importance", figsize=(8, 4))
+plt.tight_layout()
+plt.savefig("figures/feature_importance.png")
+plt.close()
+
+# ========= ACTUALIZAR README =========
 metrics_text = f"""
 ## Latest Model Results (updated {datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -243,32 +268,9 @@ metrics_text = f"""
 ![Feature Importance](figures/feature_importance.png)
 
 ---
-
 _Data source: ENTSO-E Transparency Platform | Model: RandomForestRegressor (200 trees)_
 """
 
-# Crear carpeta figures si no existe
-os.makedirs("figures", exist_ok=True)
-
-# Guardar gráficas
-plt.figure(figsize=(12, 5))
-plt.plot(y_test.index, y_test, label="Actual", linewidth=1)
-plt.plot(y_test.index, y_pred, label="Predicted", linewidth=1)
-plt.title("Swiss-German Day-Ahead Price Spread Forecast")
-plt.xlabel("Date")
-plt.ylabel("Spread (€/MWh)")
-plt.legend()
-plt.tight_layout()
-plt.savefig("figures/spread_forecast.png")
-plt.close()
-
-importances = pd.Series(model.feature_importances_, index=features).sort_values(ascending=False)
-importances.plot(kind="barh", title="Feature Importance", figsize=(8, 4))
-plt.tight_layout()
-plt.savefig("figures/feature_importance.png")
-plt.close()
-
-# Actualizar README.md
 readme_path = "README.md"
 
 if os.path.exists(readme_path):
@@ -277,8 +279,7 @@ if os.path.exists(readme_path):
 else:
     content = "# Power Spread Forecasting\n"
 
-# Reemplazar o añadir la sección de resultados
-import re
+# Reemplaza o añade la sección
 if "## Latest Model Results" in content:
     content = re.sub(r"## Latest Model Results.*", metrics_text, content, flags=re.S)
 else:
@@ -287,7 +288,7 @@ else:
 with open(readme_path, "w") as f:
     f.write(content)
 
-print("\n Results appended to README.md\n")
+print(" Results appended to README.md")
 
 
 # ====================================================

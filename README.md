@@ -39,7 +39,8 @@ Nuno Poza - 2025
 - Add model training module
 
 
-## Latest Model Results (updated 2025-10-07 15:03:59)
+
+## Latest Model Results (updated 2025-10-07 15:06:17)
 
 | Metric | Value |
 |---------|-------|
@@ -51,5 +52,4 @@ Nuno Poza - 2025
 ![Feature Importance](figures/feature_importance.png)
 
 ---
-
 _Data source: ENTSO-E Transparency Platform | Model: RandomForestRegressor (200 trees)_

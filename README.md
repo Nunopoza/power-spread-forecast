@@ -37,3 +37,19 @@ Nuno Poza - 2025
 
 ## Next steps
 - Add model training module
+
+
+## Latest Model Results (updated 2025-10-07 15:03:59)
+
+| Metric | Value |
+|---------|-------|
+| MAE (€ / MWh) | 14.62 |
+| R² | 0.511 |
+
+### Figures
+![Predicted vs Actual](figures/spread_forecast.png)
+![Feature Importance](figures/feature_importance.png)
+
+---
+
+_Data source: ENTSO-E Transparency Platform | Model: RandomForestRegressor (200 trees)_

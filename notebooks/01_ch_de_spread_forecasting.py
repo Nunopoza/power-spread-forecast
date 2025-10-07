@@ -226,6 +226,70 @@ plt.xlabel("Relative Importance")
 plt.tight_layout()
 plt.show()
 
+import os
+from datetime import datetime
+
+# Guardar métricas
+metrics_text = f"""
+## Latest Model Results (updated {datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+
+| Metric | Value |
+|---------|-------|
+| MAE (€ / MWh) | {mae:.2f} |
+| R² | {r2:.3f} |
+
+### Figures
+![Predicted vs Actual](figures/spread_forecast.png)
+![Feature Importance](figures/feature_importance.png)
+
+---
+
+_Data source: ENTSO-E Transparency Platform | Model: RandomForestRegressor (200 trees)_
+"""
+
+# Crear carpeta figures si no existe
+os.makedirs("figures", exist_ok=True)
+
+# Guardar gráficas
+plt.figure(figsize=(12, 5))
+plt.plot(y_test.index, y_test, label="Actual", linewidth=1)
+plt.plot(y_test.index, y_pred, label="Predicted", linewidth=1)
+plt.title("Swiss-German Day-Ahead Price Spread Forecast")
+plt.xlabel("Date")
+plt.ylabel("Spread (€/MWh)")
+plt.legend()
+plt.tight_layout()
+plt.savefig("figures/spread_forecast.png")
+plt.close()
+
+importances = pd.Series(model.feature_importances_, index=features).sort_values(ascending=False)
+importances.plot(kind="barh", title="Feature Importance", figsize=(8, 4))
+plt.tight_layout()
+plt.savefig("figures/feature_importance.png")
+plt.close()
+
+# Actualizar README.md
+readme_path = "README.md"
+
+if os.path.exists(readme_path):
+    with open(readme_path, "r") as f:
+        content = f.read()
+else:
+    content = "# Power Spread Forecasting\n"
+
+# Reemplazar o añadir la sección de resultados
+import re
+if "## Latest Model Results" in content:
+    content = re.sub(r"## Latest Model Results.*", metrics_text, content, flags=re.S)
+else:
+    content += "\n" + metrics_text
+
+with open(readme_path, "w") as f:
+    f.write(content)
+
+print("\n Results appended to README.md\n")
+
+
 # ====================================================
 # Save results
 # ====================================================
